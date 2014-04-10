@@ -18,8 +18,19 @@ BuildRequires: python-pbr >= 0.5.19
 # Need systemd-units for _unitdir macro
 BuildRequires: systemd-units
 # Needed by check
-#BuildRequires: python-unittest2
-#BuildRequires: python-mock
+BuildRequires: python-hacking
+BuildRequires: python-unittest2
+BuildRequires: mock
+BuildRequires: python-docutils >= 0.9.1
+BuildRequires: python-sphinx
+BuildRequires: python-testrepository >= 0.0.15
+BuildRequires: python-fixtures
+BuildRequires: python-psycopg2
+BuildRequires: MySQL-python
+BuildRequires: pylint
+BuildRequires: python-migrate
+BuildRequires: python-testscenarios
+BuildRequires: python-testtools
 
 Requires: python-alembic
 #?Babel>=1.3?
@@ -55,13 +66,13 @@ clusters on OpenStack.
 %prep
 %setup -q -n sahara-%{version}
 rm -rf sahara.egg-info
-rm -f {test-,}requirements.txt
+rm -f test-requirements.txt
 # The data_files glob appears broken in pbr 0.5.19, so be explicit
 sed -i 's,etc/sahara/\*,etc/sahara/sahara.conf.sample,' setup.cfg
 
 
 %build
-%{__python} setup.py build
+%{__python2} setup.py build
 
 export PYTHONPATH=$PWD:${PYTHONPATH}
 # Note: json warnings likely resolved w/ pygments 1.5 (not yet in Fedora)
@@ -72,7 +83,7 @@ rm -rf html/.{doctrees,buildinfo}
 
 
 %install
-%{__python} setup.py install --skip-build --root %{buildroot}
+%{__python2} setup.py install --skip-build --root %{buildroot}
 
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/openstack-sahara-api.service
 
@@ -92,8 +103,11 @@ rm -rf %{buildroot}%{python_sitelib}/sahara/tests
 mkdir -p -m0755 %{buildroot}/%{_var}/log/sahara
 
 
-#%%check
-#%%{__python} setup.py test
+%check
+# Building on koji with virtualenv requires test-requirements.txt and this
+# causes errors when trying to resolve the package names, also turning on pep8
+# results in odd exceptions from flake8.
+sh run_tests.sh --no-virtual-env --no-pep8
 
 
 %pre
