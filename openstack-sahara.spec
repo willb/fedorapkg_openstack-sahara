@@ -2,7 +2,7 @@ Name:          openstack-sahara
 Version:       2014.1.rc1
 Release:       1%{?dist}
 Provides:      openstack-savanna = %{version}-%{release}
-Obsoletes:     openstack-savanna <= 2014.1.b3-2
+Obsoletes:     openstack-savanna <= 2014.1.b3-3
 Summary:       Apache Hadoop cluster management on OpenStack
 License:       ASL 2.0
 URL:           https://launchpad.net/sahara
@@ -55,6 +55,14 @@ rm -rf sahara.egg-info
 rm -f test-requirements.txt
 # The data_files glob appears broken in pbr 0.5.19, so be explicit
 sed -i 's,etc/sahara/\*,etc/sahara/sahara.conf.sample,' setup.cfg
+# remove the shbang from these files to supress rpmlint warnings, these are
+# python based scripts that get processed to form the installed shell scripts.
+sed -i 1,2d sahara/cli/sahara_api.py
+sed -i 1,2d sahara/cli/sahara_subprocess.py
+# set executable on this file to supress rpmlint warnings, it is used as a
+# template to create shell scripts.
+chmod a+x sahara/plugins/vanilla/v2_3_0/resources/post_conf.template
+
 
 
 %build
