@@ -145,7 +145,6 @@ exit 0
 %{_datadir}/sahara/sahara.conf.sample
 %{python_sitelib}/sahara
 %{python_sitelib}/sahara-%{version}-py?.?.egg-info
-%defattr(-,sahara,sahara,-)
 %dir %{_var}/log/sahara
 
 
