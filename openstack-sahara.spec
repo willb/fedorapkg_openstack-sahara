@@ -4,6 +4,7 @@
 %{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
 
+
 Name:          openstack-sahara
 Version:       2014.1.rc1
 Release:       1%{?dist}
@@ -50,9 +51,20 @@ Requires(postun): systemd
 Requires(pre):    shadow-utils
 
 
+%package doc
+Group:         Documentation
+Summary:       Usage documentation for the Sahara cluster management API
+
+
 %description
 Sahara provides the ability to elastically manage Apache Hadoop clusters on
 OpenStack.
+
+
+%description doc
+Sahara provides the ability to elastically manage Apache Hadoop clusters on
+OpenStack. This documentation provides instructions and examples on how to
+install, use, and manage the Sahara infrastructure.
 
 
 %prep
@@ -154,19 +166,8 @@ exit 0
 %dir %{_var}/log/sahara
 
 
-%package doc
-Group:         Documentation
-Summary:       Usage documentation for the Sahara cluster management API
-
-
-%description doc
-Sahara provides the ability to elastically manage Apache Hadoop clusters on
-OpenStack. This documentation provides instructions and examples on how to
-install, use, and manage the Sahara infrastructure.
-
-
 %files doc
-%doc html
+%doc html LICENSE
 
 
 %changelog
