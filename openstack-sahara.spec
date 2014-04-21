@@ -54,7 +54,7 @@ Requires(pre):    shadow-utils
 %package doc
 Group:         Documentation
 Summary:       Usage documentation for the Sahara cluster management API
-
+Requires:      %{name} = %{version}
 
 %description
 Sahara provides the ability to elastically manage Apache Hadoop clusters on
@@ -114,6 +114,8 @@ rm -rf %{buildroot}%{python_sitelib}/sahara/tests
 
 mkdir -p -m0755 %{buildroot}/%{_var}/log/sahara
 
+mkdir -p %{buildroot}/%{_pkgdocdir}
+cp -rp html %{buildroot}/%{_pkgdocdir}
 
 %check
 # Building on koji with virtualenv requires test-requirements.txt and this
@@ -167,7 +169,7 @@ exit 0
 
 
 %files doc
-%doc html LICENSE
+%{_pkgdocdir}/html 
 
 
 %changelog
